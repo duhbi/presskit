@@ -496,7 +496,7 @@ html{margin:0}</style>
     let x = innerWidth / 2, y = innerHeight / 2, tx = x, ty = y, shown = false;
     addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; if (!shown) { shown = true; html.classList.add('cur-on'); x = tx; y = ty; } }, { passive: true });
     document.addEventListener('mouseleave', () => { html.classList.remove('cur-on'); shown = false; });
-    (function loop(){ x = tx; y = ty; cur.style.transform = 'translate(' + x + 'px,' + y + 'px)'; requestAnimationFrame(loop); })();
+    (function loop(){ x += (tx - x) * .35; y += (ty - y) * .35; cur.style.transform = 'translate(' + x + 'px,' + y + 'px)'; requestAnimationFrame(loop); })();
     document.addEventListener('mouseover', e => {
       const t = e.target.closest('.track:not(.nosrc)');
       const a = e.target.closest('a,button,canvas,[data-cur],.vwrap,.photos img');

@@ -42,7 +42,7 @@ p+p{margin-top:1em}
 :focus-visible{outline:1px solid var(--accent);outline-offset:3px}
 
 /* grain + cursor */
-#grain{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50;opacity:.035;mix-blend-mode:screen}
+#grain{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50;opacity:.055;mix-blend-mode:screen}
 #cur{position:fixed;left:0;top:0;z-index:60;pointer-events:none;display:none}
 #cur .dot{position:absolute;left:-3px;top:-3px;width:6px;height:6px;border-radius:50%;background:#fff;mix-blend-mode:difference}
 #cur .ring{position:absolute;left:-14px;top:-14px;width:28px;height:28px;border-radius:50%;border:1px solid rgba(237,234,228,.55);display:grid;place-items:center;transition:width .25s var(--ease),height .25s var(--ease),left .25s var(--ease),top .25s var(--ease),border-color .25s,background .25s}
@@ -90,9 +90,14 @@ section{padding-block:56px;border-bottom:1px solid var(--rule)}
 @media (max-width:760px){.grid2{grid-template-columns:1fr;gap:18px}}
 .lead{font-size:clamp(18px,2vw,21px);line-height:1.5}
 
+/* loops mudos: sem hover no <video> = sem overlay do Edge (PiP / pular) */
+video.lazy{pointer-events:none}
+.take .loop,.liveband .vid{position:relative}
+.take .loop::after,.liveband .vid::after{content:"";position:absolute;inset:0;pointer-events:auto}
+
 /* take band */
 .take{padding-block:40px;border-bottom:1px solid var(--rule)}
-.take video{display:block;width:100%;height:clamp(200px,22vw,320px);object-fit:cover;object-position:center 50%;background:#000;border:1px solid var(--rule)}
+.take video{display:block;width:100%;aspect-ratio:1440/540;height:auto;object-fit:cover;object-position:center 50%;background:#000;border:1px solid var(--rule)}
 
 /* set card */
 .setcard{background:var(--surface);border:1px solid var(--rule);padding:28px;display:grid;grid-template-columns:1fr auto;gap:22px 32px;align-items:center}
@@ -121,7 +126,8 @@ section{padding-block:56px;border-bottom:1px solid var(--rule)}
 .facts p{font-size:14px;color:var(--ink)}
 
 /* videos */
-.vids{display:grid;grid-template-columns:repeat(2,minmax(0,300px));gap:24px}
+.vids{display:grid;grid-template-columns:repeat(2,minmax(0,360px));gap:32px;align-items:start}
+@media (min-width:701px){.vids figure:nth-child(2){margin-top:72px}}
 @media (max-width:700px){.vids{grid-template-columns:1fr 1fr;gap:12px}}
 .vids figure{margin:0}
 .vids video{width:100%;aspect-ratio:9/16;object-fit:cover;background:#000;border:1px solid var(--rule)}
@@ -209,6 +215,31 @@ section{padding-block:56px;border-bottom:1px solid var(--rule)}
 #mini .mbar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s linear}
 @media (max-width:700px){#mini .mk{display:none}}
 
+/* ritmo */
+section.tight{padding-block:44px}
+section.airy{padding-block:84px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:40px 64px;align-items:start}
+@media (max-width:760px){.duo{grid-template-columns:1fr}}
+.duo .col>.label{margin-bottom:16px}
+.duo .col>p{max-width:none}
+.statement{width:var(--vw,100vw);margin-left:calc(50% - var(--vw,100vw)/2);padding:88px 20px;border-bottom:1px solid var(--rule);overflow:hidden}
+.statement h2{max-width:1120px;margin:0 auto;font-size:clamp(46px,9.6vw,156px);line-height:1.08;text-transform:uppercase;letter-spacing:-.01em;text-wrap:balance}
+.statement h2 em{font-style:normal;color:var(--accent)}
+section.band{width:var(--vw,100vw);margin-left:calc(50% - var(--vw,100vw)/2);background:var(--surface);padding-block:88px;border-top:1px solid var(--rule)}
+section.band .in{max-width:1120px;margin:0 auto;padding-inline:20px}
+.liveband{display:grid;grid-template-columns:360px minmax(0,1fr);gap:64px;align-items:start}
+@media (max-width:980px){.liveband{grid-template-columns:1fr;gap:40px}.liveband .vid{max-width:360px}}
+.liveband .vid{position:relative;aspect-ratio:9/16;background:#000;border:1px solid var(--rule)}
+.liveband .vid video{width:100%;height:100%;object-fit:cover}
+.liveband .vid .cap{position:absolute;left:0;right:0;bottom:0;padding:12px 14px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);background:linear-gradient(180deg,transparent,rgba(0,0,0,.85))}
+.liveband .facts div{background:var(--surface)}
+.strip{width:var(--vw,100vw);margin:0 0 0 calc(50% - var(--vw,100vw)/2);display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.strip img{aspect-ratio:1;border:0}
+.strip img:hover{transform:none;opacity:.88}
+@media (max-width:700px){.strip{grid-template-columns:1fr 1fr}.strip img:last-of-type{grid-column:span 2;aspect-ratio:2/1}}
+.count{font-size:clamp(34px,5vw,58px);text-transform:uppercase;margin-bottom:26px}
+.count span{display:block;font-family:var(--body);font-size:14px;letter-spacing:.02em;text-transform:none;color:var(--muted);margin-top:10px;font-weight:400}
+
 /* contact */
 #contato{position:relative;overflow:hidden;padding-block:80px}
 #contato .amb{position:absolute;top:50%;right:0;transform:translateY(-50%);width:min(480px,60vw);aspect-ratio:600/800;object-fit:cover;mix-blend-mode:screen;opacity:.85;pointer-events:none;
@@ -285,26 +316,20 @@ html{margin:0}</style>
   </div>
 </section>
 
-<div class="take grid2 rv">
-  <span></span>
-  <video class="lazy" muted loop playsinline preload="none" poster="media/take.jpg" data-src="media/take.mp4" aria-label="Pista do set: uma pessoa nos ombros de outra fazendo sinal do rock e batendo cabeça"></video>
-</div>
+<div class="take rv"><div class="loop">
+  <video class="lazy" muted loop playsinline preload="none" disablepictureinpicture disableremoteplayback poster="media/take.jpg" data-src="media/take.mp4" aria-label="Pista do set: uma pessoa nos ombros de outra fazendo sinal do rock e batendo cabeça"></video>
+</div></div>
 
-<section id="artista" class="rv">
-  <div class="grid2">
-    <span class="label">O artista</span>
-    <div>
+<section id="artista" class="rv tight">
+  <div class="duo">
+    <div class="col">
+      <span class="label">O artista</span>
       <p class="lead">DUH BI é o nome que Henrique deu ao que sobra quando o ruído vira música.</p>
       <p>Dez anos produzindo, engenheiro de áudio por ofício, e um som que junta o peso da bass music com o vocal do funk brasileiro sem pedir licença a nenhum dos dois. Lançamentos próprios, parcerias com DJ Fifonha e Lawrie, e as faixas vivendo no Beatport em Brazilian Funk.</p>
       <p>Do lado do som, um organismo: o visualizer que ele mesmo criou reage ao áudio em tempo real e ocupa o telão enquanto o set acontece.</p>
     </div>
-  </div>
-</section>
-
-<section id="som" class="rv">
-  <div class="grid2">
-    <span class="label">O som</span>
-    <div>
+    <div class="col" id="som">
+      <span class="label">O som</span>
       <p class="lead">Funk com o vocal na frente e o peso embaixo, e o silêncio usado como instrumento antes de cada queda.</p>
       <p>O set é feito de faixas próprias, edits e bootlegs que só existem pra pista. Nada de playlist, nada de conforto.</p>
       <div class="chips">
@@ -314,33 +339,35 @@ html{margin:0}</style>
   </div>
 </section>
 
-<section id="aovivo" class="rv">
-  <div class="grid2">
-    <span class="label">Ao vivo</span>
-    <div class="live">
-      <div>
-        <h2>O telão respira<br>com o set.</h2>
-        <p style="margin-top:22px">Começa na tensão, sobe até a agressividade e termina em catarse. A pista não assiste: entra.</p>
-        <p>E o visual vai junto, um organismo em preto, branco e vermelho que come o som em tempo real, criado pelo próprio DUH BI. Roda em qualquer casa com projetor ou LED, via HDMI.</p>
-        <div class="facts">
-          <div><span class="label">Formatos</span><p>DJ set de 60 a 90 min, ou estendido se a noite pedir.</p></div>
-          <div><span class="label">Encaixe</span><p>Underground, bass, funk, experimental, eventos de arte e marca.</p></div>
-          <div><span class="label">Técnico</span><p>CDJ ou XDJ. Notebook com HDMI pro telão, se tiver visual. O resto a gente conversa.</p></div>
-        </div>
-      </div>
-      <div class="vid">
-        <video class="lazy" muted loop playsinline preload="none" poster="media/visualizer.jpg" data-src="media/visualizer.mp4" aria-label="Trecho do visualizer DUH BI reagindo ao som"></video>
-        <div class="cap">Visualizer ao vivo · reage ao áudio do set</div>
+<div class="statement rv" aria-hidden="true">
+  <h2>O que sobra quando o ruído vira <em>música.</em></h2>
+</div>
+
+<section id="aovivo" class="rv band">
+  <div class="in liveband">
+    <div class="vid">
+      <video class="lazy" muted loop playsinline preload="none" disablepictureinpicture disableremoteplayback poster="media/visualizer.jpg" data-src="media/visualizer.mp4" aria-label="Trecho do visualizer DUH BI reagindo ao som"></video>
+      <div class="cap">Visualizer ao vivo · reage ao áudio do set</div>
+    </div>
+    <div>
+      <span class="label">Ao vivo</span>
+      <h2 style="margin-top:14px">O telão respira<br>com o set.</h2>
+      <p style="margin-top:22px">Começa na tensão, sobe até a agressividade e termina em catarse. A pista não assiste: entra.</p>
+      <p>E o visual vai junto, um organismo em preto, branco e vermelho que come o som em tempo real, criado pelo próprio DUH BI. Roda em qualquer casa com projetor ou LED, via HDMI.</p>
+      <div class="facts">
+        <div><span class="label">Formatos</span><p>DJ set de 60 a 90 min, ou estendido se a noite pedir.</p></div>
+        <div><span class="label">Encaixe</span><p>Underground, bass, funk, experimental, eventos de arte e marca.</p></div>
+        <div><span class="label">Técnico</span><p>CDJ ou XDJ. Notebook com HDMI pro telão, se tiver visual. O resto a gente conversa.</p></div>
       </div>
     </div>
   </div>
 </section>
 
-<section id="videos" class="rv">
+<section id="videos" class="rv airy">
   <div class="grid2">
     <span class="label">Vídeos</span>
     <div>
-      <p style="margin-bottom:22px">Trechos de sets, do jeito que foram parar no Instagram. Toca com som.</p>
+      <p style="margin-bottom:26px">Trechos de sets, do jeito que foram parar no Instagram. Toca com som.</p>
       <div class="vids">
         <figure><div class="vwrap"><video class="av" preload="none" playsinline poster="media/live-dominate.jpg" src="media/live-dominate.mp4"></video><span class="vplay" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg></span><div class="vbar"><i></i></div></div><figcaption><b>Dominate</b> · ao vivo</figcaption></figure>
         <figure><div class="vwrap"><video class="av" preload="none" playsinline poster="media/live-onda-da-bolha.jpg" src="media/live-onda-da-bolha.mp4"></video><span class="vplay" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg></span><div class="vbar"><i></i></div></div><figcaption><b>Onda da Bolha</b> · ao vivo</figcaption></figure>
@@ -349,15 +376,19 @@ html{margin:0}</style>
   </div>
 </section>
 
-<section id="fotos" class="rv">
-  <div class="grid2">
+<section id="fotos" class="rv airy">
+  <div class="grid2" style="margin-bottom:34px">
     <span class="label">Fotos</span>
-    <figure class="photos" id="photos" style="margin:0">
-      <img src="media/live2.jpg" alt="Pista lotada com lasers cruzando a sala, DUH BI ao fundo" tabindex="0">
-      <img src="media/live1.jpg" alt="DUH BI de perfil apontando pra pista" tabindex="0">
-      <img src="media/live3.jpg" alt="DUH BI de baixo pra cima, braço tatuado erguido" tabindex="0">
-      <figcaption><a class="btn ghost" href="https://duhbi.github.io/presskit/media/duhbi-fotos-logo.zip">Fotos em alta + logo (zip)</a><span>Clica numa foto pra ampliar.</span></figcaption>
-    </figure>
+    <p>Três noites, o mesmo corpo. Clica numa foto pra ampliar.</p>
+  </div>
+  <figure class="photos strip" id="photos">
+    <img src="media/live2.jpg" alt="Pista lotada com lasers cruzando a sala, DUH BI ao fundo" tabindex="0">
+    <img src="media/live1.jpg" alt="DUH BI de perfil apontando pra pista" tabindex="0">
+    <img src="media/live3.jpg" alt="DUH BI de baixo pra cima, braço tatuado erguido" tabindex="0">
+  </figure>
+  <div class="grid2" style="margin-top:28px">
+    <span></span>
+    <p><a class="btn ghost" href="https://duhbi.github.io/presskit/media/duhbi-fotos-logo.zip">Fotos em alta + logo (zip)</a></p>
   </div>
 </section>
 
@@ -365,8 +396,8 @@ html{margin:0}</style>
   <div class="grid2">
     <span class="label">Músicas</span>
     <div>
+      <h2 class="count">Dez faixas.<br><span>O que já saiu, e o que só toca na pista.</span></h2>
       <div class="tracks" id="tracks"></div>
-      <p style="margin-top:20px;color:var(--muted);font-size:14px">O que já saiu, e o que só toca na pista.</p>
       <p style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap"><a class="btn ghost" href="https://open.spotify.com/artist/6ob3cmG3OkLRx9dI53i5D1" target="_blank" rel="noopener">Spotify</a><a class="btn ghost" href="https://soundcloud.com/djduhbi" target="_blank" rel="noopener">SoundCloud</a></p>
     </div>
   </div>
@@ -428,6 +459,9 @@ html{margin:0}</style>
   html.classList.add('js');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  /* largura real do documento (100vw inclui a barra de rolagem) */
+  const setVW = () => html.style.setProperty('--vw', html.clientWidth + 'px'); setVW(); addEventListener('resize', setVW);
 
   /* ---------- entrada ---------- */
   const enter = () => requestAnimationFrame(() => requestAnimationFrame(() => html.classList.add('in')));

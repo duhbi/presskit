@@ -78,7 +78,7 @@ p+p{margin-top:1em}
 .topbar nav a{font-size:11px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;color:var(--ink);font-weight:500;padding:6px 0;border-bottom:1px solid transparent;transition:color .2s,border-color .2s}
 .topbar nav a:hover,.topbar nav a:focus-visible{border-bottom-color:var(--accent);outline:none}
 .topbar nav a.on{color:var(--accent);border-bottom-color:var(--accent)}
-@media (max-width:700px){.topbar nav{gap:12px 14px}.topbar nav a{font-size:10px;letter-spacing:.16em}.topbar .in>.eyebrow{display:none}}
+@media (max-width:700px){.topbar nav{gap:12px 14px}.topbar nav a{font-size:10px;letter-spacing:.16em}.topbar .in>.eyebrow{display:none}.topbar nav a.nav-set{display:none}}
 
 /* reveal */
 .js .rv{opacity:0;transform:translateY(12px);transition:opacity .55s var(--ease),transform .55s var(--ease)}
@@ -257,7 +257,7 @@ html{margin:0}</style>
 <div class="topbar" id="topbar"><div class="in">
   <span class="eyebrow">Press kit</span>
   <nav>
-    <a href="#set">Ouvir o set</a>
+    <a href="#set" class="nav-set">Ouvir o set</a>
     <a href="#aovivo">Ao vivo</a>
     <a href="#videos">Vídeos</a>
     <a href="#fotos">Fotos</a>

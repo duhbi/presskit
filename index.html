@@ -13,6 +13,7 @@
 <meta property="og:url" content="https://duhbi.github.io/presskit/">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:,">
+<script src="https://w.soundcloud.com/player/api.js"></script>
 <title>DUH BI Press Kit</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;700&display=swap">
@@ -99,11 +100,33 @@ video.lazy{pointer-events:none}
 .take{padding-block:40px;border-bottom:1px solid var(--rule)}
 .take video{display:block;width:100%;aspect-ratio:1440/540;height:auto;object-fit:cover;object-position:center 50%;background:#000;border:1px solid var(--rule)}
 
-/* set card */
-.setcard{background:var(--surface);border:1px solid var(--rule);padding:28px;display:grid;grid-template-columns:1fr auto;gap:22px 32px;align-items:center}
-@media (max-width:760px){.setcard{grid-template-columns:1fr}}
-.setcard .title{font-family:var(--display);font-size:clamp(22px,3vw,34px);text-transform:uppercase;line-height:1.02}
-.setcard .meta{color:var(--muted);margin-top:10px;font-size:14px}
+/* set card (player do SoundCloud com a cara do site) */
+.setcard{background:var(--surface);border:1px solid var(--rule);padding:22px;display:grid;grid-template-columns:112px minmax(0,1fr) auto;gap:20px 24px;align-items:center}
+@media (max-width:700px){.setcard{grid-template-columns:72px minmax(0,1fr) auto;gap:14px;padding:16px}}
+.setcard .art{width:112px;height:112px;object-fit:cover;border:1px solid var(--rule);background:#000}
+@media (max-width:700px){.setcard .art{width:72px;height:72px}}
+.setcard .title{font-family:var(--display);font-size:clamp(20px,2.6vw,30px);text-transform:uppercase;line-height:1.02}
+.setcard .set-bar{height:4px;background:var(--rule);margin-top:16px;cursor:pointer;position:relative}
+.setcard .set-bar::before{content:"";position:absolute;left:0;right:0;top:-10px;bottom:-10px}
+.setcard .set-bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s linear;position:relative}
+.setcard .set-bar i::after{content:"";position:absolute;right:-5px;top:50%;width:10px;height:10px;border-radius:50%;background:var(--accent);transform:translateY(-50%) scale(0);transition:transform .2s var(--ease)}
+.setcard:hover .set-bar i::after,.setcard.playing .set-bar i::after{transform:translateY(-50%) scale(1)}
+.sc-on:not(.sc-ready) .setcard .scplay{opacity:.45;pointer-events:none}
+.setcard .set-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:8px}
+.setcard .set-time{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-variant-numeric:tabular-nums}
+.setcard .sclink{font-size:11px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--muted);border-bottom:1px solid transparent;transition:color .2s,border-color .2s}
+.setcard .sclink:hover{color:var(--ink);border-bottom-color:var(--accent)}
+.setcard .scplay{width:56px;height:56px;border-radius:50%;border:1px solid var(--ink);background:transparent;color:var(--ink);display:none;place-items:center;cursor:pointer;padding:0;transition:background .2s,border-color .2s,transform .2s var(--ease)}
+.setcard .scplay svg{width:18px;height:18px;fill:currentColor;display:block}
+.setcard .scplay .ic-pause{display:none}
+.setcard .scplay:hover{border-color:var(--accent);color:var(--accent);transform:scale(1.06)}
+.setcard.playing .scplay{background:var(--accent);border-color:var(--accent);color:#fff}
+.setcard.playing .scplay .ic-play{display:none}.setcard.playing .scplay .ic-pause{display:block}
+.setcard.loading .scplay{animation:pulse 1s infinite}
+.sc-on .setcard .scplay{display:grid}
+.sc-on .setcard .scfallback{display:none}
+.scwrap{position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none}
+.scwrap iframe{width:400px;height:166px}
 .btn{display:inline-flex;align-items:center;gap:12px;background:var(--accent);color:var(--accent-ink);text-decoration:none;font-weight:700;font-size:13px;letter-spacing:.18em;text-transform:uppercase;padding:18px 26px;border:1px solid var(--accent);white-space:nowrap;transition:background .2s,color .2s,transform .2s var(--ease)}
 .btn:hover,.btn:focus-visible{background:#A50C25;outline:none;transform:translateY(-1px)}
 .btn.ghost{background:transparent;color:var(--ink);border-color:var(--ink)}
@@ -304,14 +327,23 @@ html{margin:0}</style>
     <span class="label">O set</span>
     <div>
       <div class="setcard">
-        <div>
+        <img class="art" id="scart" src="media/set-cover.jpg" alt="Capa do set no SoundCloud">
+        <div class="set-info">
           <div class="title">DUH BI set @ Drumnbloco<br>S.O.S Juiz de Fora</div>
-          <div class="meta">Gravado na pista, sem retoque.</div>
+          <div class="set-bar" id="scbar"><i></i></div>
+          <div class="set-row"><span class="set-time" id="sctime">Set ao vivo</span><a class="sclink" href="https://soundcloud.com/djduhbi/sosjf" target="_blank" rel="noopener">SoundCloud</a></div>
         </div>
-        <a class="btn" href="https://soundcloud.com/djduhbi/sosjf" target="_blank" rel="noopener">
+        <button class="play scplay" id="scplay" type="button" aria-label="Tocar o set">
+          <svg class="ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg>
+          <svg class="ic-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg>
+        </button>
+        <a class="btn scfallback" href="https://soundcloud.com/djduhbi/sosjf" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Ouvir no SoundCloud
         </a>
       </div>
+
+      <div class="scwrap"><iframe id="scset" title="DUH BI set @ Drumnbloco" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Fdjduhbi%2Fsosjf&color=%23c8102e&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false"></iframe></div>
+
     </div>
   </div>
 </section>
@@ -648,8 +680,33 @@ html{margin:0}</style>
     miniIO = new IntersectionObserver(es => es.forEach(en => { mini.classList.toggle('show', !en.isIntersecting && !!current); }), { threshold: .3 });
     miniIO.observe(current.el);
   }
+  let scw = null;
+  (function soundcloud(){
+    if (!document.getElementById('scset')) return;
+    html.classList.add('sc-on');
+    const bail = setTimeout(() => { if (!html.classList.contains('sc-ready')) html.classList.remove('sc-on'); }, 8000);
+    if (!window.SC) { clearTimeout(bail); html.classList.remove('sc-on'); return; }
+    try { scw = SC.Widget('scset'); } catch (e) { scw = null; clearTimeout(bail); html.classList.remove('sc-on'); return; }
+    const card = document.querySelector('.setcard'), btn = document.getElementById('scplay'), bar = document.getElementById('scbar'), fill = bar.querySelector('i'), time = document.getElementById('sctime'), art = document.getElementById('scart');
+    let dur = 0;
+    const fmt = ms => { const s = Math.max(0, ms/1000|0); return (s/60|0) + ':' + String(s%60).padStart(2,'0'); };
+    let pendingSeek = -1;
+    scw.bind(SC.Widget.Events.READY, () => {
+      clearTimeout(bail); html.classList.add('sc-on', 'sc-ready');
+      scw.getDuration(d => { dur = d; time.textContent = '0:00 / ' + fmt(d); });
+    });
+    scw.bind(SC.Widget.Events.PLAY, () => { card.classList.remove('loading'); card.classList.add('playing'); if (pendingSeek >= 0) { const ms = pendingSeek; pendingSeek = -1; setTimeout(() => scw.seekTo(ms), 150); } document.querySelectorAll('audio,video').forEach(o => { if (!o.muted && !o.paused) o.pause(); }); });
+    scw.bind(SC.Widget.Events.PAUSE, () => card.classList.remove('playing', 'loading'));
+    scw.bind(SC.Widget.Events.FINISH, () => { card.classList.remove('playing'); fill.style.width = '0'; });
+    scw.bind(SC.Widget.Events.PLAY_PROGRESS, e => { if (!dur) return; fill.style.width = (e.currentPosition / dur * 100) + '%'; time.textContent = fmt(e.currentPosition) + ' / ' + fmt(dur); });
+    btn.addEventListener('click', () => scw.isPaused(p => { if (p) { card.classList.add('loading'); scw.play(); } else scw.pause(); }));
+    bar.addEventListener('click', e => { if (!dur) return; const r = bar.getBoundingClientRect(); const ms = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * dur;
+      fill.style.width = (ms / dur * 100) + '%'; time.textContent = fmt(ms) + ' / ' + fmt(dur);
+      scw.isPaused(p => { if (p) { pendingSeek = ms; card.classList.add('loading'); scw.play(); } else scw.seekTo(ms); }); });
+  })();
   document.addEventListener('play', e => {
     const m = e.target; if (!(m instanceof HTMLMediaElement) || m.muted) return;
+    if (scw) { try { scw.pause(); } catch (e2) {} }
     document.querySelectorAll('audio,video').forEach(o => { if (o !== m && !o.muted && !o.paused) o.pause(); });
   }, true);
   avVideos.forEach(v => {

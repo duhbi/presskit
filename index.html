@@ -26,7 +26,7 @@
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:clip}
 a{color:inherit}
 img,video{max-width:100%;display:block}
 button{font:inherit;color:inherit}
@@ -86,7 +86,7 @@ p+p{margin-top:1em}
 
 /* sections */
 section{padding-block:56px;border-bottom:1px solid var(--rule)}
-.grid2{display:grid;grid-template-columns:200px 1fr;gap:28px 48px;align-items:start}
+.grid2{display:grid;grid-template-columns:200px minmax(0,1fr);gap:28px 48px;align-items:start}
 @media (max-width:760px){.grid2{grid-template-columns:1fr;gap:18px}}
 .lead{font-size:clamp(18px,2vw,21px);line-height:1.5}
 
@@ -109,8 +109,8 @@ section{padding-block:56px;border-bottom:1px solid var(--rule)}
 .chips span{font-size:12px;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--rule);padding:8px 12px;color:var(--ink)}
 
 /* live */
-.live{display:grid;grid-template-columns:1fr 300px;gap:40px;align-items:start}
-@media (max-width:860px){.live{grid-template-columns:1fr}.live .vid{max-width:320px}}
+.live{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:40px;align-items:start}
+@media (max-width:980px){.live{grid-template-columns:1fr}.live .vid{max-width:320px}}
 .live .vid{position:relative;aspect-ratio:9/16;max-width:100%;background:#000;border:1px solid var(--rule)}
 .live .vid video{width:100%;height:100%;object-fit:cover}
 .live .vid .cap{position:absolute;left:0;right:0;bottom:0;padding:12px 14px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);background:linear-gradient(180deg,transparent,rgba(0,0,0,.85))}
@@ -236,7 +236,7 @@ footer .mantra b{font-weight:400;color:var(--accent)}
   .label::after{transform:scaleX(1);transition:none}
   #grain{display:none}
 }
-</style>
+html{margin:0}</style>
 </head>
 <body>
 
